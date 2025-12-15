@@ -1,31 +1,21 @@
 """Демомодуль для курса"""
 
 
-class Car:
-    """Машина"""
-    make: str
-    model: str
-    year: int
-    vehicle_type: str = 'Легковой'
+class Task:
+    """Задача"""
+    done: bool = False
+    title: str
+
+    def set_info(self, text: str):
+        """Установка title"""
+        self.title = text
+
+    def get_info(self):
+        """Получение данных задачи"""
+        return self.title
 
 
-audi = Car()
-audi.make = 'Audi'
-print(audi.vehicle_type)
+task = Task()
+task.set_info('Сделать лекцию')  # Установлен заголовок
 
-audi.vehicle_type = 'Лодки'
-
-Car.vehicle_type = 'Грузовой'
-
-print(audi.vehicle_type)
-
-
-class Boat:
-    """Лодки"""
-    # pass
-    year: int
-
-
-boat1 = Boat()
-boat1.year = 2025
-print(boat1.year)
+print(task.get_info())  # Вывод заголовка
