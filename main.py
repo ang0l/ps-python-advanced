@@ -1,24 +1,31 @@
 """Демомодуль для курса"""
 
 
-class User:
-    """Пользоатели системы"""
-    email: str
-    name: str
-    age: int = 39
+class Car:
+    """Машина"""
+    make: str
+    model: str
+    year: int
+    vehicle_type: str = 'Легковой'
 
 
-print(type(User))
+audi = Car()
+audi.make = 'Audi'
+print(audi.vehicle_type)
 
-userMaria = User()
-print(userMaria)
+audi.vehicle_type = 'Лодки'
 
-userAnton = User()
-print(userAnton)
+Car.vehicle_type = 'Грузовой'
 
-userAnton.email = 'a@a.ru'
-userAnton.name = 'Антон'
-# userAnton.age = 18
+print(audi.vehicle_type)
 
-print(userAnton.email)
-print(userAnton.age)
+
+class Boat:
+    """Лодки"""
+    # pass
+    year: int
+
+
+boat1 = Boat()
+boat1.year = 2025
+print(boat1.year)
