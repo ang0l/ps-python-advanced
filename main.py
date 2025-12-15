@@ -1,21 +1,22 @@
 """Демомодуль для курса"""
 
 
-class Task:
-    """Задача"""
-    done: bool = False
-    title: str
+class Auth:
+    """Авторизация пользователя"""
+    is_authed: bool = False
 
-    def set_info(self, text: str):
-        """Установка title"""
-        self.title = text
+    def login(self):
+        """Вход"""
+        self.is_authed = True
 
-    def get_info(self):
-        """Получение данных задачи"""
-        return self.title
+    def logout(self):
+        """Выход"""
+        self.is_authed = False
 
 
-task = Task()
-task.set_info('Сделать лекцию')  # Установлен заголовок
-
-print(task.get_info())  # Вывод заголовка
+auth_service = Auth()
+auth_service.login()  # Пользователь авторизировался
+# Auth.login(auth_service)  # Пользователь авторизировался
+print(auth_service.is_authed)  # True
+auth_service.logout()  # Пользователь вышел
+print(auth_service.is_authed)  # False
