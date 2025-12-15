@@ -1,22 +1,23 @@
 """Демомодуль для курса"""
 
 
-class Auth:
-    """Авторизация пользователя"""
-    is_authed: bool = False
+class Note:
+    """Заметка"""
 
-    def login(self):
-        """Вход"""
-        self.is_authed = True
+    # эти аргументы можно не объявлять, т.к. они создадутся в рамках инициализации
+    # инициализация дает экономию на объявлении этих атрибутов
+    # title: str
+    # description: str
+    default_description = 'Описания нет'
 
-    def logout(self):
-        """Выход"""
-        self.is_authed = False
+    def __init__(self, title: str, description: str = '') -> None:
+        self.title = title
+        self.description = description
 
 
-auth_service = Auth()
-auth_service.login()  # Пользователь авторизировался
-# Auth.login(auth_service)  # Пользователь авторизировался
-print(auth_service.is_authed)  # True
-auth_service.logout()  # Пользователь вышел
-print(auth_service.is_authed)  # False
+note = Note('Заметка', 'Это моя заметка')
+# note.title = 'Заметка'
+# note.description = 'Это моя заметка'
+print(note.description)
+
+note_next = Note('Моя заметка')
