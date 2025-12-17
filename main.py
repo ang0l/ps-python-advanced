@@ -1,36 +1,21 @@
 """Демомодуль для курса
-Встроенные методы
+Property
 """
 
 
-class ShoppingList:
-    """Список покупок"""
+class Rectangle:
+    """Прямоугольник"""
 
-    def __init__(self, items: list[str]) -> None:
-        self.items: list[str] = items
+    def __init__(self, width: float, height: float) -> None:
+        self.width = width
+        self.height = height
 
-    def __eq__(self, value: object) -> bool:
-        if not isinstance(value, ShoppingList):
-            return False
-        return self.items == value.items
-
-    def __len__(self):
-        return len(self.items)
-
-    def __getitem__(self, index):
-        return self.items[index]
-
-    def __repr__(self) -> str:
-        # return f'[{', '.join(self.items)}]'
-        return f'ShoppingList[items = {', '.join(self.items)}]'
+    @property
+    def area(self):
+        """Площадь"""
+        return self.width * self.height
 
 
-list_1 = ShoppingList(['Книга'])
-list_2 = ShoppingList(['Телевизор', 'Компьютер'])
+rect = Rectangle(10, 5)
 
-print(len(list_1))
-print(list_1[0])
-print(list_2[1])
-print(list_2)
-
-print(list_1 == list_2)
+print(rect.area)  # из-за @property, теперь обращаемся к методу как к свойству
