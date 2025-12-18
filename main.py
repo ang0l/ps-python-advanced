@@ -1,21 +1,25 @@
 """Демомодуль для курса
-Декораторы с аргументами
+Декораторы классов
 """
 
 
-def log(func):
-    """Функция логирования"""
-    def wrapper(*args, **kwargs):
-        print(f'Вызов {func.__name__} с аргументами {args} {kwargs}')
-        result = func(*args, **kwargs)
-        print('Готово!')
-        return result
-    return wrapper
+def add_repr(cls):
+    """Добавлеине repr"""
+
+    def __repr__(self):
+        return f'{cls.__name__}[{self.__dict__}]'
+    cls.__repr__ = __repr__
+    return cls
 
 
-@log
-def add(a: float, b: float) -> float:
-    return a + b
+@add_repr
+class User:
+    """Пользователь"""
+
+    def __init__(self, name: str, age: int):
+        self.name = name
+        self.age = age
 
 
-print(add(3, 5))
+user = User('Андрей', 55)
+print(user)
