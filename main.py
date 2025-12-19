@@ -1,20 +1,32 @@
 """Демомодуль для курса
-Декоратор с параметром
+Упражнение - Декоратор Retry
 """
 
+import random
 
-def repeat(times: int):
+
+def retry(times: int):
+    """Декоратор Retry"""
     def decorator(func):
         def wrapper(*args, **kwargs):
-            for _ in range(times):
-                func(*args, **kwargs)
+            for attemp in range(times):
+                try:
+                    return func(*args, **kwargs)
+                except ValueError as e:
+                    print(f'[ATTEMP {attemp + 1}]: {e}')
+                    if attemp == times:
+                        print('Все попытки завершены')
         return wrapper
     return decorator
 
 
-@repeat(3)
-def hello():
-    print('Привет!')
+@retry(3)
+def unstable():
+    """Иногда падает с ошибкой"""
+    if random.random() < 0.7:
+        raise ValueError('Ошибка соединения')
+
+    print('Успешное выполнение')
 
 
-hello()
+unstable()
