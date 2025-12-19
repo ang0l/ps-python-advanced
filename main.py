@@ -1,32 +1,23 @@
 """Демомодуль для курса
-Упражнение - Декоратор Retry
+Декоратор методов
 """
 
-import random
+
+def log_call(fn):
+    """Логирует вызов"""
+    def wrapper(*args, **kwargs):
+        print(f'[LOG] {fn.__qualname__} args={args} kwargs={kwargs}')
+        return fn(*args, **kwargs)
+    return wrapper
 
 
-def retry(times: int):
-    """Декоратор Retry"""
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            for attemp in range(times):
-                try:
-                    return func(*args, **kwargs)
-                except ValueError as e:
-                    print(f'[ATTEMP {attemp + 1}]: {e}')
-                    if attemp == times:
-                        print('Все попытки завершены')
-        return wrapper
-    return decorator
+class Service:
+    """Сервиснвй"""
+    @log_call
+    def process(self, x: float) -> float:
+        """Удваивание"""
+        return x * 2
 
 
-@retry(3)
-def unstable():
-    """Иногда падает с ошибкой"""
-    if random.random() < 0.7:
-        raise ValueError('Ошибка соединения')
-
-    print('Успешное выполнение')
-
-
-unstable()
+s = Service()
+s.process(10)
