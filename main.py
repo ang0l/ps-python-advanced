@@ -1,54 +1,43 @@
 """Демомодуль для курса
-Упражнение - Декоратор limit
+Инкапсуляция
 """
 
-from functools import wraps
-from typing import Any
+
+class User:
+    """Пользователь"""
+
+    def __init__(self, name: str, balance: float):
+        self.name = name
+        self.__balance = balance  # __balance - приватное свойство
+
+    def get_blance(self):
+        """Получить баланс"""
+        return self.__balance
+
+    def deposit(self, amount: float):
+        """Пополнить средства"""
+        if amount > 0:
+            self.__balance += amount
+        else:
+            raise ValueError('Сумма должна быть положительной')
+
+    def withdraw(self, amount: float):
+        """Снять средства"""
+        if 0 < amount <= self.__balance:
+            self.__balance -= amount
+        else:
+            raise ValueError('Недостаточно средств')
 
 
-class Limit:
-    def __init__(self, count: int):
-        self.count = count
+u = User('Андрей', 1000)
+u.deposit(500)
+print(u.get_blance())
+u.withdraw(700)
+print(u.get_blance())
+print(u.__dict__)
 
-    def __call__(self, fn):
-        @wraps(fn)
-        def wrapper(*arg, **kwarg):
-            if self.count <= 0:
-                raise RuntimeError('Визов лимита исчерпан')
-            self.count -= 1
-            return fn(*arg, **kwarg)
-        return wrapper
-# def limit_calls(max_calls: int):
-#     def decorator(fn):
-#         @wraps(fn)
-#         def wrapper(self, *args, **kwargs):
-#             coutn_attr = f'_{fn.__name__}_count'
-#             current = getattr(self, coutn_attr, 0)
-#             if current >= max_calls:
-#                 raise RuntimeError('Визов лимита исчерпан')
-#             setattr(self, coutn_attr, current + 1)
-#             print(f'[LOG] {fn.__qualname__} запуск {current + 1}/{max_calls}')
-#             return fn(self, *args, **kwargs)
-#         return wrapper
-#     return decorator
-
-
-class Engine:
-    """Двигатель"""
-
-    # @limit_calls(3)
-    @Limit(3)
-    def start(self):
-        """Запуск"""
-        print('Двигатель запущен!')
-
-
-car = Engine()
-
-try:
-    car.start()
-    car.start()
-    car.start()
-    car.start()  # <-- Ошибка Runtime Error
-except RuntimeError as e:
-    print(f'[ERROR]: {e}')
+# Работа под капотом
+u.__balance = -500  # не удалось изменить. создано еще одно свойство __balance
+u._User__balance = -500  # удалось изменить.
+print(u.get_blance())
+print(u.__dict__)
