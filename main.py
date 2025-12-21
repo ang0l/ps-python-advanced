@@ -1,26 +1,40 @@
 """Демомодуль для курса
-Getattr и Setattr
+Упражнение - Декоратор limit
 """
 
-
-# class User:
-#     age: float
+from functools import wraps
 
 
-# u = User()
-# setattr(u, 'age', 10)
-# print(getattr(u, 'age'))
+def limit_calls(max_calls: int):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(self, *args, **kwargs):
+            coutn_attr = f'_{fn.__name__}_count'
+            current = getattr(self, coutn_attr, 0)
+            if current >= max_calls:
+                raise RuntimeError('Лимит запусков исчерпан')
+            setattr(self, coutn_attr, current + 1)
+            print(f'[LOG] {fn.__qualname__} запуск {current + 1}/{max_calls}')
+            return fn(self, *args, **kwargs)
+        return wrapper
+    return decorator
 
-class Commands:
-    def start(self): print('Старт')
-    def stop(self): print('Стоп')
-    def help(self): print('Помощь')
+
+class Engine:
+    """Двигатель"""
+
+    @limit_calls(3)
+    def start(self):
+        """Запуск"""
+        print('Двигатель запущен!')
 
 
-cmd = Commands()
-action = input('Введите команду > ')
+car = Engine()
 
-if hasattr(cmd, action):
-    getattr(cmd, action)()
-else:
-    print('Команда не найдена')
+try:
+    car.start()
+    car.start()
+    car.start()
+    car.start()  # <-- Ошибка Runtime Error
+except RuntimeError as e:
+    print(f'[ERROR]: {e}')
