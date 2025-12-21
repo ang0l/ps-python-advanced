@@ -1,32 +1,26 @@
 """Демомодуль для курса
-Дескриптор
+Getattr и Setattr
 """
 
 
-class Positive:
-    def __init__(self, name):
-        self.name = name
-
-    def __get__(self, obj, owner):
-        print('Сработал get')
-        return obj.__dict__[self.name]
-
-    def __set__(self, obj, value):
-        print('Сработал set')
-        if value <= 0:
-            raise ValueError(
-                f'Значение "{self.name}" должно быть больше нуля. Ваше значение = {value}')
-        obj.__dict__[self.name] = value
+# class User:
+#     age: float
 
 
-class Product:
-    price = Positive('price')
+# u = User()
+# setattr(u, 'age', 10)
+# print(getattr(u, 'age'))
+
+class Commands:
+    def start(self): print('Старт')
+    def stop(self): print('Стоп')
+    def help(self): print('Помощь')
 
 
-p = Product()
-p.price = 100
-print(p.price)
-try:
-    p.price = -1
-except ValueError as e:
-    print(f'[Error]: {e}')
+cmd = Commands()
+action = input('Введите команду > ')
+
+if hasattr(cmd, action):
+    getattr(cmd, action)()
+else:
+    print('Команда не найдена')
