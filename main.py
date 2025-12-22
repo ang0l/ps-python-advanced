@@ -1,43 +1,34 @@
 """Демомодуль для курса
-Инкапсуляция
+Наследование
 """
 
 
 class User:
-    """Пользователь"""
+    """Пользователь платформы"""
 
-    def __init__(self, name: str, balance: float):
+    def __init__(self, name: str, email: str):
         self.name = name
-        self.__balance = balance  # __balance - приватное свойство
+        self.email = email
 
-    def get_blance(self):
-        """Получить баланс"""
-        return self.__balance
-
-    def deposit(self, amount: float):
-        """Пополнить средства"""
-        if amount > 0:
-            self.__balance += amount
-        else:
-            raise ValueError('Сумма должна быть положительной')
-
-    def withdraw(self, amount: float):
-        """Снять средства"""
-        if 0 < amount <= self.__balance:
-            self.__balance -= amount
-        else:
-            raise ValueError('Недостаточно средств')
+    def get_info(self):
+        return f'{self.name}, {self.email}'
 
 
-u = User('Андрей', 1000)
-u.deposit(500)
-print(u.get_blance())
-u.withdraw(700)
-print(u.get_blance())
-print(u.__dict__)
+class Student(User):
+    """Студетн платформы"""
 
-# Работа под капотом
-u.__balance = -500  # не удалось изменить. создано еще одно свойство __balance
-u._User__balance = -500  # удалось изменить.
-print(u.get_blance())
-print(u.__dict__)
+    def watch_video(self):
+        print('Смотрю')
+
+
+class Mentor(User):
+    """Преподаватель платформы"""
+
+    def check_homework(self):
+        print('Проверяю')
+
+
+student = Student('Вася', 'a@a.ru')
+print(student.get_info())
+print(student.email)
+print(student.watch_video())
