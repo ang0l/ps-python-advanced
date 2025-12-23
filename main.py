@@ -1,15 +1,16 @@
 """Демомодуль для курса
-Упражнение - Курсы
+Mixins
 """
 
-# Делаем класс Курса с ценой, названием, длительностью. Методы:
-# - узнать цену
-# - вывести информацию
-# Делаем курс с AI и тренажерами
-# - можно расчитать рассрочку на срок курса
-# Делаем курс с проектом с параметром названия проекта
-# - можно расчитать рассрочку на срок курса
-# - можно вывести информацию о проекте
+
+class CreditMixin:
+    """Миксин кредита"""
+    price = 0
+    length = 0
+
+    def calc_credit(self):
+        """Расчет рассрочки"""
+        return self.price / self.length
 
 
 class Course:
@@ -29,24 +30,16 @@ class Course:
         return f'Курс {self.name} по цене {self.price} длительностью {self.length}'
 
 
-class AI(Course):
+class AI(Course, CreditMixin):
     """AI и тренажеры"""
 
-    def calc_credit(self):
-        """Расчет рассрочки"""
-        return self.price / self.length
 
-
-class Project(Course):
+class Project(Course, CreditMixin):
     """Проект"""
 
     def __init__(self, price: float, name: str, length: int, project_name: str):
         super().__init__(price, name, length)
         self.project_name = project_name
-
-    def calc_credit(self):
-        """Расчет рассрочки"""
-        return self.price / self.length
 
     def get_project_info(self):
         """Получить информацию"""
@@ -56,3 +49,4 @@ class Project(Course):
 course = Project(10000, 'Python', 2, 'Кальуклятор')
 print(course.get_info())
 print(course.get_project_info())
+print(course.calc_credit())
