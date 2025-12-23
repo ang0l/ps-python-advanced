@@ -1,41 +1,32 @@
 """Демомодуль для курса
-Method Resolution Order
-"""
+Super"""
 
 
-class Light:
-    """Управление светом"""
+class Order:
+    """Заказ"""
 
-    def turn_on(self):
-        """Включение света"""
-        print('Свет включен')
+    def __init__(self, number: int, total: float):
+        self.number = number
+        self.total = total
+        print(f'Создан заказ #{number} на сумму {total}')
 
-
-class Music:
-    """Управление музыкой"""
-
-    def turn_on(self):
-        """Включение музыки"""
-        print('Музыка включена')
+    def process(self):
+        """Оформление заказа"""
+        print('Заказ оформлен')
 
 
-class SmartHome(Light, Music):
-    """Умный дом"""
+class EmailOrder(Order):
+    """Заказ по email"""
 
-    def play(self):
-        """Включение музыки
-        переопределенный метод родительского класса Music
-        """
-        print('Альтернативный play')
+    def __init__(self, number: int, total: float, email: str):
+        super().__init__(number, total)
+        self.email = email
 
-    def start(self):
-        """Активация умного дома"""
-        print('Умный дом активен')
-        self.turn_on()
-        self.play()
+    def process(self):
+        """Оформление заказа"""
+        super().process()
+        print(f'Письмо отправлено на {self.email}')
 
 
-home = SmartHome()
-home.start()
-
-print(SmartHome.mro())
+e = EmailOrder(10, 1, 'a@a.ru')
+e.process()
