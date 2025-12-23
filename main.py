@@ -1,48 +1,31 @@
 """Демомодуль для курса
-Полиморфизм
+Композиция
 """
-
-len('Purple')
-len([1, 2, 3])
-len({1: 'a', 2: 'b'})
+# Notification - уведомление
+# EmailNotification - отправка через e-mail
 
 
-class Payment:
-    """Оплата"""
+class Notification:
+    """Уведомление"""
 
-    def pay(self, amount):
-        """Метод оплаты"""
-        raise NotImplementedError('Метод должен быть определен')
+    def __init__(self, sender):
+        self.sender = sender
 
+    def send(self, message):
+        """Отправка"""
+        self.sender.send(message)
 
-class CardPayment(Payment):
-    """Оплата картой"""
-
-    def pay(self, amount):
-        """Метод оплаты"""
-        print(f'Оплата картой: {amount}')
+    def get_ack(self):
+        """Еще какой-нибудь метод"""
 
 
-class CryptoPayment(Payment):
-    """Оплата криптой"""
+class EmailSender:
+    """E-mail отправщик"""
 
-    def pay(self, amount):
-        """Метод оплаты"""
-        print(f'Оплата криптой: {amount}')
-
-
-class ApplePayment(Payment):
-    """Оплата apple"""
-
-    def pady(self, amount):
-        """Метод оплаты"""
-        print(f'Оплата apple: {amount}')
+    def send(self, message):
+        """Отправление сообщения"""
+        print(f'Отправлено сообщение {message}')
 
 
-payments = [CardPayment(), CryptoPayment(), ApplePayment()]
-
-for p in payments:
-    try:
-        p.pay(100)
-    except NotImplementedError as e:
-        print(f'[Ошибка]: {e}')
+notification = Notification(EmailSender())
+notification.send('Сообщение')
