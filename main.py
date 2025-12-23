@@ -1,52 +1,48 @@
 """Демомодуль для курса
-Mixins
+Полиморфизм
 """
 
-
-class CreditMixin:
-    """Миксин кредита"""
-    price = 0
-    length = 0
-
-    def calc_credit(self):
-        """Расчет рассрочки"""
-        return self.price / self.length
+len('Purple')
+len([1, 2, 3])
+len({1: 'a', 2: 'b'})
 
 
-class Course:
-    """Курс"""
+class Payment:
+    """Оплата"""
 
-    def __init__(self, price: float, name: str, length: int):
-        self.price = price
-        self.name = name
-        self.length = length
-
-    def get_price(self):
-        """Получить цену"""
-        return self.price
-
-    def get_info(self):
-        """Получить информацию"""
-        return f'Курс {self.name} по цене {self.price} длительностью {self.length}'
+    def pay(self, amount):
+        """Метод оплаты"""
+        raise NotImplementedError('Метод должен быть определен')
 
 
-class AI(Course, CreditMixin):
-    """AI и тренажеры"""
+class CardPayment(Payment):
+    """Оплата картой"""
+
+    def pay(self, amount):
+        """Метод оплаты"""
+        print(f'Оплата картой: {amount}')
 
 
-class Project(Course, CreditMixin):
-    """Проект"""
+class CryptoPayment(Payment):
+    """Оплата криптой"""
 
-    def __init__(self, price: float, name: str, length: int, project_name: str):
-        super().__init__(price, name, length)
-        self.project_name = project_name
-
-    def get_project_info(self):
-        """Получить информацию"""
-        return f'Проект: {self.project_name}'
+    def pay(self, amount):
+        """Метод оплаты"""
+        print(f'Оплата криптой: {amount}')
 
 
-course = Project(10000, 'Python', 2, 'Кальуклятор')
-print(course.get_info())
-print(course.get_project_info())
-print(course.calc_credit())
+class ApplePayment(Payment):
+    """Оплата apple"""
+
+    def pady(self, amount):
+        """Метод оплаты"""
+        print(f'Оплата apple: {amount}')
+
+
+payments = [CardPayment(), CryptoPayment(), ApplePayment()]
+
+for p in payments:
+    try:
+        p.pay(100)
+    except NotImplementedError as e:
+        print(f'[Ошибка]: {e}')
