@@ -1,91 +1,52 @@
 """Демомодуль для курса
-Protocol
+Упражнение - Хранилище
 """
-# Заказ в интернет магазине
-# Item - name, price, qty и метод subtotal() -> считает цену
-# Политики скидок - NoDiscount - без скидки, PercentageDiscount - процент от заказа
-# Order - list[Item] и политика скидок, метод расчета total total_with_discount и set_policy
+# Хранилище
+# Нужно реализовать MevoryStorage и FileStorage с методами load и save
+# Приложение читает строку и передает в use_storage, сохраняет в одном из storage
+# После успешного сохранения читает storage и выводит сохраненные данные
 
-from dataclasses import dataclass
 from typing import Protocol
 
 
-class DiscountPolicy(Protocol):
-    """Протокол скидок"""
+class Storage(Protocol):
+    """Протокол хранения"""
 
-    def discount(self, total: float) -> float:  # type: ignore
-        """Протокол скидок"""
+    def save(self, data: str) -> None: ...
 
-
-@dataclass
-class Item:
-    """Единица товара"""
-    name: str
-    price: float
-    qty: int = 1
-
-    def subtotal(self) -> float:
-        """Расчет суммы"""
-        return self.price * self.qty
+    def load(self) -> str: ...
 
 
-@dataclass
-class PersentageDiscount:
-    """Политика со скидкой"""
-    percent: float
+class MemoryStorage:
+    """Хранение в памят"""
 
-    def discount(self, total: float) -> float:
-        """Расчет скидки"""
-        return total * (self.percent / 100)
+    def save(self, data: str) -> None:
+        self.data = data
 
-
-@dataclass
-class PersentageExtraCharge:
-    """Политика с наценкой"""
-    percent: float
-
-    def discount(self, total: float) -> float:
-        """Расчет наценки"""
-        return total * (self.percent / 100) * -1
+    def load(self) -> str:
+        return getattr(self, 'data', '')
 
 
-class NoDiscount:
-    """Политика без скидки"""
+class FileStorage:
+    """Хранение в памят"""
 
-    def discount(self, total: float) -> float:
-        """Расчет дискаунта"""
-        return 0
+    def save(self, data: str) -> None:
+        with open('data.txt', 'w', encoding='utf-8') as f:
+            f.write(data)
 
-
-@dataclass
-class Order:
-    """Заказ"""
-    items: list[Item]
-    policy: DiscountPolicy
-
-    def total(self):
-        """Стоимость по количеству"""
-        return sum(i.subtotal() for i in self.items)
-
-    def total_with_discount(self):
-        """Стоимость со скидкой"""
-        t = self.total()
-        return t - self.policy.discount(t)
-
-    def set_policy(self, policy):
-        """Установка скидки в процентах"""
-        self.policy = policy
+    def load(self) -> str:
+        with open('data.txt', 'r', encoding='utf-8') as f:
+            return f.read()
 
 
-basket = [Item('Бумага', 100, 5), Item('Ершик', 1000, 1)]
-order = Order(basket, NoDiscount())
-print(order.total())
-print(order.total_with_discount())
+def use_storage(storage: Storage, data: str):
+    storage.save(data)
+    return storage.load()
 
-order.set_policy(PersentageDiscount(10))
-print(order.total())
-print(order.total_with_discount())
 
-order.set_policy(PersentageExtraCharge(10))
-print(order.total())
-print(order.total_with_discount())
+mem = MemoryStorage()
+file = FileStorage()
+
+user_input = input('Введите данные: ')
+print(use_storage(mem, user_input))
+print(use_storage(file, user_input))
