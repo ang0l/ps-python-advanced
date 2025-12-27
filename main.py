@@ -1,60 +1,31 @@
 """Демомодуль для курса
-Абстрактный класс
+Single Responsibility Principle
 """
-# Хранилище
-# Нужно реализовать MevoryStorage и FileStorage с методами load и save
-# Приложение читает строку и передает в use_storage, сохраняет в одном из storage
-# После успешного сохранения читает storage и выводит сохраненные данные
+# Single Responsibility Principle (SRP)
+# Класс должен иметь только одну причину для изменения.
 
-from abc import ABC, abstractmethod
-from typing import Protocol
+from dataclasses import dataclass
 
 
-class Storage(ABC):
-    """Протокол хранения"""
+@dataclass
+class Order:
+    items: list[str]
 
-    @abstractmethod
-    def save(self, data: str) -> None: ...
+    def calculate_total(self):  # метод несет ответственность за заказ
+        return len(self.items) * 10
 
-    @abstractmethod
-    def load(self) -> str: ...
+    # def save_to_db(self):  # метод НЕ несет ответственность за заказ
+    #     print('Сохранение в базу')
 
-    def log(self):
-        print('Сохранено')
-
-
-class MemoryStorage(Storage):
-    """Хранение в памят"""
-
-    def save(self, data: str) -> None:
-        self.data = data
-        self.log()
-
-    def load(self) -> str:
-        return getattr(self, 'data', '')
+    # def send_confirmation_email(self):  # метод НЕ несет ответственность за заказ
+    #     print('Отправка письма')
 
 
-class FileStorage(Storage):
-    """Хранение в памят"""
-
-    def save(self, data: str) -> None:
-        with open('data.txt', 'w', encoding='utf-8') as f:
-            f.write(data)
-            self.log()
-
-    def load(self) -> str:
-        with open('data.txt', 'r', encoding='utf-8') as f:
-            return f.read()
+class OrderRepository:
+    def save_to_db(self, order: Order):
+        print('Сохранение в базу')
 
 
-def use_storage(storage: Storage, data: str):
-    storage.save(data)
-    return storage.load()
-
-
-mem = MemoryStorage()
-file = FileStorage()
-
-user_input = input('Введите данные: ')
-print(use_storage(mem, user_input))
-print(use_storage(file, user_input))
+class EmailService:
+    def send_confirmation_email(self, email: str, order: Order):
+        print('Отправка письма')
