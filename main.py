@@ -1,51 +1,46 @@
 """Демомодуль для курса
-Упражнение - Уведомления
+Liskov Substitution Principle
 """
 
-# Принцип открытости и закрытости
-# Классы должны быть открыты для расшинения, но закрыты для модификации
+# Объекты дочерних классов должны быть взаимозаменяемы
+# с обхектами своих базовых классов.
 
+# Елси где-то в коде используется базовый класс,
+# то можно подствить любой его наследник -
+# и программа должна работать корректно, не лоамясь и не меняя поведение.
 
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
-# class Notifier:
-#     def send(self, message: str, method: str) -> None:
-#         if method == 'email':
-#             print(f'[Email] Отправлено сообщение: {message}')
-#         elif method == 'push':
-#             print(f'[Push] Отправлено сообщение: {message}')
-#         else:
-#             print('Неизвестный способ уведомлелния')
-
-class Notifier(ABC):
-    @abstractmethod
-    def send(self, message: str) -> None: ...
-
-
-class EmailNotifier(Notifier):
-    def send(self, message: str) -> None:
-        print(f'[Email] Отправлено сообщение: {message}')
-
-
-class PushNotifier(Notifier):
-    def send(self, message: str) -> None:
-        print(f'[Push] Отправлено сообщение: {message}')
-
-
-class TelegramNotifier(Notifier):
-    def send(self, message: str) -> None:
-        print(f'[Telegram] Отправлено сообщение: {message}')
-
-
 @dataclass
-class NotificationService:
-    notifier: Notifier
+class User:
+    name: str
+    bonus: int = 0
 
-    def send(self, message: str):
-        self.notifier.send(message)
+    def add_bonus(self, amount: int):
+        self.bonus += amount
+        print(f'{self.name} получил {amount}. Всего {self.bonus}')
 
 
-service = NotificationService(TelegramNotifier())
-service.send('Привет')
+class PremiumUser(User):
+    def add_bonus(self, amount: int):
+        self.bonus += amount * 2
+        print(f'{self.name} получил {amount}. Всего {self.bonus}')
+
+
+class BannedUser(User):
+    def add_bonus(self, amount: int):
+        # raise Exception('Пользователь забанен')
+        self.bonus = 0
+        print(f'{self.name} не может получить бонусы. Всего {self.bonus}')
+
+
+# user = User('Вася')
+
+def reward_user(user: User):
+    user.add_bonus(100)
+
+
+reward_user(User('Вася'))
+reward_user(PremiumUser('Вася'))
+reward_user(BannedUser('Вася'))
