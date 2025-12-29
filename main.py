@@ -1,46 +1,45 @@
 """Демомодуль для курса
-Liskov Substitution Principle
+Упражнение - Оплата в рассрочку
 """
 
-# Объекты дочерних классов должны быть взаимозаменяемы
-# с обхектами своих базовых классов.
+# Создать 3 метода платежа:
+# - Всю сумму
+# - Всю сумму - число бонусов
+# - Деление на N частей, 1 сразу, остальные потом
 
-# Елси где-то в коде используется базовый класс,
-# то можно подствить любой его наследник -
-# и программа должна работать корректно, не лоамясь и не меняя поведение.
 
 from dataclasses import dataclass
 
 
+class Payment:
+    def pay(self, amount: float) -> float:
+        print(f'Списано: {amount}')
+        return amount
+
+
 @dataclass
-class User:
-    name: str
-    bonus: int = 0
+class BonusPayment(Payment):
+    bonuses: float = 0
 
-    def add_bonus(self, amount: int):
-        self.bonus += amount
-        print(f'{self.name} получил {amount}. Всего {self.bonus}')
-
-
-class PremiumUser(User):
-    def add_bonus(self, amount: int):
-        self.bonus += amount * 2
-        print(f'{self.name} получил {amount}. Всего {self.bonus}')
+    def pay(self, amount: float) -> float:
+        final = amount - self.bonuses
+        print(f'Списано: {final}')
+        return final
 
 
-class BannedUser(User):
-    def add_bonus(self, amount: int):
-        # raise Exception('Пользователь забанен')
-        self.bonus = 0
-        print(f'{self.name} не может получить бонусы. Всего {self.bonus}')
+@dataclass
+class InstallmentPayment(Payment):
+    part: int = 0
+
+    def pay(self, amount: float) -> float:
+        final = amount / self.part
+        print(f'Списано: {final}')
+        return final
 
 
-# user = User('Вася')
-
-def reward_user(user: User):
-    user.add_bonus(100)
+def pay(method: Payment):
+    return method.pay(100)
 
 
-reward_user(User('Вася'))
-reward_user(PremiumUser('Вася'))
-reward_user(BannedUser('Вася'))
+pay(InstallmentPayment(2))
+pay(BonusPayment(25))
