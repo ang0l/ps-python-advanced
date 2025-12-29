@@ -1,45 +1,65 @@
 """Демомодуль для курса
-Упражнение - Оплата в рассрочку
+Interface Segregation Principle
 """
 
-# Создать 3 метода платежа:
-# - Всю сумму
-# - Всю сумму - число бонусов
-# - Деление на N частей, 1 сразу, остальные потом
+# Клиенты не должны зависеть от методов, которые они не используют.
+# Не заставляй классы реализовывать методы, которые им не нужны.
+
+# Плохой пример
+# class Printer:
+#     def print_doc(self, doc: str):
+#         pass
+
+#     def scan_doc(self, doc: str):
+#         pass
+
+#     def fax_doc(self, doc: str):
+#         pass
 
 
-from dataclasses import dataclass
+# class OldPrinter(Printer):
+#     def print_doc(self, doc: str):
+#         print(doc)
+
+#     def scan_doc(self, doc: str):
+#         raise NotImplementedError('Не могу')
+
+#     def fax_doc(self, doc: str):
+#         raise NotImplementedError('Не могу')
 
 
-class Payment:
-    def pay(self, amount: float) -> float:
-        print(f'Списано: {amount}')
-        return amount
+from abc import ABC, abstractmethod
 
 
-@dataclass
-class BonusPayment(Payment):
-    bonuses: float = 0
-
-    def pay(self, amount: float) -> float:
-        final = amount - self.bonuses
-        print(f'Списано: {final}')
-        return final
+class Printable(ABC):
+    @abstractmethod
+    def print_doc(self, doc: str):
+        pass
 
 
-@dataclass
-class InstallmentPayment(Payment):
-    part: int = 0
-
-    def pay(self, amount: float) -> float:
-        final = amount / self.part
-        print(f'Списано: {final}')
-        return final
+class Scannable(ABC):
+    @abstractmethod
+    def scan_doc(self, doc: str):
+        pass
 
 
-def pay(method: Payment):
-    return method.pay(100)
+class Faxable(ABC):
+    @abstractmethod
+    def fax_doc(self, doc: str):
+        pass
 
 
-pay(InstallmentPayment(2))
-pay(BonusPayment(25))
+class ModernPrinter(Printable, Scannable, Faxable):
+    def print_doc(self, doc: str):
+        pass
+
+    def scan_doc(self, doc: str):
+        pass
+
+    def fax_doc(self, doc: str):
+        pass
+
+
+class OldPrinter(Printable):
+    def print_doc(self, doc: str):
+        pass
