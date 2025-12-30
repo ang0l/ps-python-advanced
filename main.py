@@ -1,74 +1,40 @@
 """Демомодуль для курса
-Упражнение - Методы оплат
+Dependency Inversion Principle
 """
-# Клиенты не должны зависеть от методов, которые они не используют.
-# Не заставляй классы реализовывать методы, которые им не нужны.
 
+# Модули верхних уровней не должны зависеть от модулей нижних уровней.
+# Оба типа модулей должжны зависет от абстраций.
+# Абстракции не должны зависеть от деталей.
+# Детали должжнры зависет от абстракций
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 
-# class PaymentProcessor:
-#     def pay(self, amount: float):
-#         pass
-
-#     def refund(self, amount: float):
-#         pass
-
-#     def tokenize_card(self, card_number: str):
-#         pass
-
-#     def check_balance(self):
-#         pass
-
-
-class Payable(ABC):
+class Logger(ABC):
     @abstractmethod
-    def pay(self, amount: float):
-        pass
-
-    @abstractmethod
-    def refund(self, amount: float):
-        pass
+    def log(self, message: str): ...
 
 
-class Tokenizable(ABC):
-    @abstractmethod
-    def tokenize_card(self, card_number: str):
-        pass
+class FileLogger(Logger):
+    def log(self, message: str):
+        print(f'Запись в файл: {message}')
 
 
-class BalanceCheckable(ABC):
-    @abstractmethod
-    def check_balance(self):
-        pass
+class ConsoleLogger(Logger):
+    def log(self, message: str):
+        print(f'Запись в консоль: {message}')
 
 
-class MasterCard(Payable, Tokenizable, BalanceCheckable):
-    def pay(self, amount: float):
-        pass
+@dataclass
+class UserService:
+    # logger = FileLogger()  # !!! Придется менять с файллоггера на консольлоггер
+    logger: Logger
 
-    def refund(self, amount: float):
-        pass
-
-    def tokenize_card(self, card_number: str):
-        pass
-
-
-class Kiwi(Payable):
-    def pay(self, amount: float):
-        pass
-
-    def refund(self, amount: float):
-        pass
+    def create_user(self, name: str):
+        # Создает пользователя
+        self.logger.log(f'Создан аккаунт {name}')
 
 
-class PayPal(Payable, BalanceCheckable):
-    def pay(self, amount: float):
-        pass
-
-    def refund(self, amount: float):
-        pass
-
-    def check_balance(self):
-        pass
+service = UserService(FileLogger())
+service.create_user('Андрей')
