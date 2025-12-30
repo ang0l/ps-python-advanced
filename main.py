@@ -1,65 +1,74 @@
 """Демомодуль для курса
-Interface Segregation Principle
+Упражнение - Методы оплат
 """
-
 # Клиенты не должны зависеть от методов, которые они не используют.
 # Не заставляй классы реализовывать методы, которые им не нужны.
-
-# Плохой пример
-# class Printer:
-#     def print_doc(self, doc: str):
-#         pass
-
-#     def scan_doc(self, doc: str):
-#         pass
-
-#     def fax_doc(self, doc: str):
-#         pass
-
-
-# class OldPrinter(Printer):
-#     def print_doc(self, doc: str):
-#         print(doc)
-
-#     def scan_doc(self, doc: str):
-#         raise NotImplementedError('Не могу')
-
-#     def fax_doc(self, doc: str):
-#         raise NotImplementedError('Не могу')
 
 
 from abc import ABC, abstractmethod
 
 
-class Printable(ABC):
+# class PaymentProcessor:
+#     def pay(self, amount: float):
+#         pass
+
+#     def refund(self, amount: float):
+#         pass
+
+#     def tokenize_card(self, card_number: str):
+#         pass
+
+#     def check_balance(self):
+#         pass
+
+
+class Payable(ABC):
     @abstractmethod
-    def print_doc(self, doc: str):
+    def pay(self, amount: float):
         pass
 
-
-class Scannable(ABC):
     @abstractmethod
-    def scan_doc(self, doc: str):
+    def refund(self, amount: float):
         pass
 
 
-class Faxable(ABC):
+class Tokenizable(ABC):
     @abstractmethod
-    def fax_doc(self, doc: str):
+    def tokenize_card(self, card_number: str):
         pass
 
 
-class ModernPrinter(Printable, Scannable, Faxable):
-    def print_doc(self, doc: str):
-        pass
-
-    def scan_doc(self, doc: str):
-        pass
-
-    def fax_doc(self, doc: str):
+class BalanceCheckable(ABC):
+    @abstractmethod
+    def check_balance(self):
         pass
 
 
-class OldPrinter(Printable):
-    def print_doc(self, doc: str):
+class MasterCard(Payable, Tokenizable, BalanceCheckable):
+    def pay(self, amount: float):
+        pass
+
+    def refund(self, amount: float):
+        pass
+
+    def tokenize_card(self, card_number: str):
+        pass
+
+
+class Kiwi(Payable):
+    def pay(self, amount: float):
+        pass
+
+    def refund(self, amount: float):
+        pass
+
+
+class PayPal(Payable, BalanceCheckable):
+    def pay(self, amount: float):
+        pass
+
+    def refund(self, amount: float):
+        pass
+
+    def check_balance(self):
         pass
