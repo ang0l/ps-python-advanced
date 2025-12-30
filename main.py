@@ -1,40 +1,45 @@
-"""Демомодуль для курса
-Dependency Inversion Principle
-"""
+"""Демомодуль для курса. Упражнение - Оповещения о низком остатке"""
 
-# Модули верхних уровней не должны зависеть от модулей нижних уровней.
-# Оба типа модулей должжны зависет от абстраций.
-# Абстракции не должны зависеть от деталей.
-# Детали должжнры зависет от абстракций
+# Сделать LowStockService, который в мтоде run() проверяет в
+# InMemoryStockRepository - сколько осталось товара (число items)
+# и если их меньше 10 - отправляется уведомление через EmailNotifier
 
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Protocol
 
 
-class Logger(ABC):
-    @abstractmethod
-    def log(self, message: str): ...
+class StockRepository(Protocol):
+    def get_stock_count(self) -> int: ...
 
 
-class FileLogger(Logger):
-    def log(self, message: str):
-        print(f'Запись в файл: {message}')
-
-
-class ConsoleLogger(Logger):
-    def log(self, message: str):
-        print(f'Запись в консоль: {message}')
+class Notifire(Protocol):
+    def notify(self, message: str) -> int: ...
 
 
 @dataclass
-class UserService:
-    # logger = FileLogger()  # !!! Придется менять с файллоггера на консольлоггер
-    logger: Logger
+class InMemoryStockRepository:
+    items_count: int
 
-    def create_user(self, name: str):
-        # Создает пользователя
-        self.logger.log(f'Создан аккаунт {name}')
+    def get_stock_count(self) -> int:
+        return self.items_count
 
 
-service = UserService(FileLogger())
-service.create_user('Андрей')
+class EmailNotifire:
+    def notify(self, message: str):
+        print(f'email - {message}')
+
+
+@dataclass
+class LowStockService:
+    repository: StockRepository
+    notifire: Notifire
+
+    def run(self):
+        if self.repository.get_stock_count() <= 10:
+            self.notifire.notify('Мало товара')
+        else:
+            print('Проверка пройдена')
+
+
+service = LowStockService(InMemoryStockRepository(12), EmailNotifire())
+service.run()
