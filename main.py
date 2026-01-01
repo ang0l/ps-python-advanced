@@ -12,8 +12,8 @@ class StockRepository(Protocol):
     def get_stock_count(self) -> int: ...
 
 
-class Notifire(Protocol):
-    def notify(self, message: str) -> int: ...
+class Notifier(Protocol):
+    def notify(self, message: str): ...
 
 
 @dataclass
@@ -24,7 +24,7 @@ class InMemoryStockRepository:
         return self.items_count
 
 
-class EmailNotifire:
+class EmailNotifier:
     def notify(self, message: str):
         print(f'email - {message}')
 
@@ -32,14 +32,14 @@ class EmailNotifire:
 @dataclass
 class LowStockService:
     repository: StockRepository
-    notifire: Notifire
+    notifier: Notifier
 
     def run(self):
         if self.repository.get_stock_count() <= 10:
-            self.notifire.notify('Мало товара')
+            self.notifier.notify('Мало товара')
         else:
             print('Проверка пройдена')
 
 
-service = LowStockService(InMemoryStockRepository(12), EmailNotifire())
+service = LowStockService(InMemoryStockRepository(12), EmailNotifier())
 service.run()
