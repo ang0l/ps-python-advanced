@@ -1,45 +1,18 @@
-"""Демомодуль для курса. Упражнение - Оповещения о низком остатке"""
+"""Демомодуль для курса. Eval Loop"""
 
-# Сделать LowStockService, который в мтоде run() проверяет в
-# InMemoryStockRepository - сколько осталось товара (число items)
-# и если их меньше 10 - отправляется уведомление через EmailNotifier
-
-from dataclasses import dataclass
-from typing import Protocol
+import dis
 
 
-class StockRepository(Protocol):
-    def get_stock_count(self) -> int: ...
+def pr(a):
+    return a + 1
 
 
-class Notifier(Protocol):
-    def notify(self, message: str): ...
+def sum_new(a, b):
+    c = a + b
+    d = pr(c)
+    return d
 
 
-@dataclass
-class InMemoryStockRepository:
-    items_count: int
+x = sum_new(1, 2)
 
-    def get_stock_count(self) -> int:
-        return self.items_count
-
-
-class EmailNotifier:
-    def notify(self, message: str):
-        print(f'email - {message}')
-
-
-@dataclass
-class LowStockService:
-    repository: StockRepository
-    notifier: Notifier
-
-    def run(self):
-        if self.repository.get_stock_count() <= 10:
-            self.notifier.notify('Мало товара')
-        else:
-            print('Проверка пройдена')
-
-
-service = LowStockService(InMemoryStockRepository(12), EmailNotifier())
-service.run()
+dis.dis(sum_new)
