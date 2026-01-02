@@ -1,20 +1,16 @@
-"""Демомодуль для курса. Память и сборка мусора"""
+"""Демомодуль для курса. Обобщения"""
 
-# import sys
-
-
-# a = [1, 2, 3]
-# b = a
-# del a
-# print(b)
-# print(sys.getrefcount(b))
-
-import gc
+from typing import TypeVar
 
 
-a = []
-b = [a]
-a.append(b)
+T = TypeVar('T')
 
-print(gc.get_stats())
-gc.collect()
+
+def first_item(items: list[T]) -> T:
+    return items[0]
+
+
+users = ['Андрей', 'Ирина']
+num = [1, 2, 3]
+
+res = first_item(users)
