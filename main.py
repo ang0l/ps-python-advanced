@@ -1,28 +1,26 @@
-"""Демомодуль для курса. Упражнение - Работа с tuple"""
+"""Демомодуль для курса. Optional"""
 
-# make_pair - создаёт Tuple из двух значений
-# get_first - достаёт первый элемент из пары
-# get_second - достаёт второй элемент из пары
-# swap_pair - меняет элементы местами
-
-from typing import TypeVar
+from dataclasses import dataclass
+from typing import Optional
 
 
-T = TypeVar('T')
-R = TypeVar('R')
+@dataclass
+class User:
+    id: int
+    name: str
+    email: str
 
 
-def make_pair(a: T, b: R) -> tuple[T, R]:
-    return (a, b)
+def get_user_by_id(user_id: int) -> Optional[User]:
+    users = [
+        User(1, 'Андрей', 'a@a.ru'),
+        User(2, 'Ирина', 'i@a.ru')
+    ]
+    for user in users:
+        if user.id == user_id:
+            return user
+
+    return None
 
 
-def get_first(pair: tuple[T, R]) -> T:
-    return pair[0]
-
-
-def get_second(pair: tuple[T, R]) -> R:
-    return pair[1]
-
-
-def swap_pair(pair: tuple[T, R]) -> tuple[R, T]:
-    return (pair[1], pair[0])
+user = get_user_by_id(999)
