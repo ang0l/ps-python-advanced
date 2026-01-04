@@ -1,40 +1,31 @@
-"""Демомодуль для курса. Generic Class"""
+"""Демомодуль для курса. Упражнение - Репозиторий"""
+
+# Нужно сделать Repository, который работает с любымим типами и имеет методы:
+# add - добавляет в список элемент
+# get_by_index - получает по index
+# get_all - получает все
 
 from dataclasses import dataclass
-from typing import Generic, TypeVar
-
-
-@dataclass
-class IntBox:
-    value: int
-
-    def get(self) -> int:
-        return self.value
-
-
-@dataclass
-class StrBox:
-    value: str
-
-    def get(self) -> str:
-        return self.value
-
+from typing import Generic, Optional, TypeVar
 
 T = TypeVar('T')
 
 
 @dataclass
-class Box(Generic[T]):
-    value: T
+class Repository(Generic[T]):
+    items: list[T]
 
-    def get(self) -> T:
-        return self.value
+    def add(self, item: T):
+        self.items.append(item)
+
+    def get_by_index(self, index: int) -> Optional[T]:
+        if 0 <= index < len(self.items):
+            return self.items[index]
+        return None
+
+    def get_all(self) -> list[T]:
+        return self.items
 
 
-int_box = Box(1)
-ib = int_box.get()
-
-str_box = Box('Андрей')
-sb = str_box.get()
-
-print(ib, sb)
+repo = Repository[str](['a', 'b'])
+print(repo.get_by_index(2))
