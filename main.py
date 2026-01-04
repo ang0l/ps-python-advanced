@@ -1,29 +1,40 @@
-"""Демомодуль для курса. Упражнение - Safe методы"""
+"""Демомодуль для курса. Generic Class"""
 
-# Сделать функции
-# safe_get - безопасное получение элемента по индексу
-# map_optional - Применяет функцию к значению, если оно не None
-# or_else - Возвращает значение или default если None
+from dataclasses import dataclass
+from typing import Generic, TypeVar
 
-from typing import Callable, Optional, TypeVar
+
+@dataclass
+class IntBox:
+    value: int
+
+    def get(self) -> int:
+        return self.value
+
+
+@dataclass
+class StrBox:
+    value: str
+
+    def get(self) -> str:
+        return self.value
+
 
 T = TypeVar('T')
-R = TypeVar('R')
 
 
-def safe_get(items: list[T], index: int) -> Optional[T]:
-    if 0 <= index <= len(items):
-        return items[index]
-    return None
+@dataclass
+class Box(Generic[T]):
+    value: T
+
+    def get(self) -> T:
+        return self.value
 
 
-def map_optional(value: Optional[T], transformer: Callable[[T], R]) -> Optional[R]:
-    if value is not None:
-        return transformer(value)
-    return None
+int_box = Box(1)
+ib = int_box.get()
 
+str_box = Box('Андрей')
+sb = str_box.get()
 
-def or_else(value: Optional[T], default: T) -> T:
-    if value is not None:
-        return value
-    return default
+print(ib, sb)
