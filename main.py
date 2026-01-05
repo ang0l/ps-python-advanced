@@ -1,45 +1,29 @@
-"""Демомодуль для курса. Упражнение - Поиск по id"""
+"""Демомодуль для курса. Union"""
 
-# Есть User, Product и Order у которых есть поле id.
-# Нужно сделать универвальную функицю поиска по id
+from typing import Optional, TypeVar, Union
 
-
-from dataclasses import dataclass
-from typing import Optional, Protocol, TypeVar
+# Union - это объединение двух типов
+# def safe_dif(a: float, b: float) -> Union[float, str]:
 
 
-class Identifiable(Protocol):
-    id: int
+def safe_dif(a: float, b: float) -> float | str:
+    if b == 0:
+        return 'Деление на 0'
+    return a / b
 
 
-T = TypeVar('T', bound=Identifiable)
-
-
-@dataclass
-class User:
-    id: int
-    name: str
-    email: str
-
-
-@dataclass
-class Product:
-    id: int
-    title: str
-
-
-@dataclass
-class Order:
-    id: int
-    products: list[Product]
-
-
-def get_by_id(items: list[T], id_: int) -> Optional[T]:
-    for item in items:
-        # проверка на id
-        if item.id == id_:
-            return item
+# def safe_dif2(a: float, b: float) -> float | None:
+def safe_dif2(a: float, b: float) -> Optional[float]:
+    if b == 0:
         return None
+    return a / b
 
 
-get_by_id([User(1, 'Андрей', 'a@a.ru')], 1)
+T = TypeVar('T')
+
+
+# def ensure_list(value: str | list[str]) -> list[str]:
+def ensure_list(value: T | list[T]) -> list[T]:
+    if isinstance(value, list):
+        return value
+    return [value]
