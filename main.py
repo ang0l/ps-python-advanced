@@ -1,18 +1,19 @@
-"""Демомодуль для курса. Ограничения типов"""
-
-from typing import Generic, TypeVar
-
-Number = TypeVar('Number', int, float)  # Дженерик ограничен int-ом и float-ом
+"""Демомодуль для курса. Generic bound"""
+from dataclasses import dataclass
+from typing import Generic, Protocol, TypeVar
 
 
-class MyMath(Generic[Number]):
-    def max(self, a: Number, b: Number):
-        return a if a > b else b
-
-    def add(self, a: Number, b: Number):
-        return a + b
+class Runnable(Protocol):
+    def run(self) -> None: ...
 
 
-# math = MyMath[str]()
-math = MyMath[int]()
-math = MyMath[float]()
+T = TypeVar('T', bound=Runnable)
+
+
+@dataclass
+class TaskRunner(Generic[T]):
+    tasks: list[T]
+
+    def run_all(self) -> None:
+        for task in self.tasks:
+            task.run()
