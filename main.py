@@ -1,35 +1,48 @@
-"""Демомодуль для курса. TypeGuard"""
+"""Демомодуль для курса
+Упражнение - Модель события"""
+
+# Есть 3 типа событий:
+# ClickEvent - x, y
+# KeyEvent - key
+# ResizeEvent - width, height
+
+# Нужно сделать функцию:
+# def handle_event(ev: ClickEvent | KeyEvent | ResizeEvent) -> str:
+# выводит строку с параметрами события
 
 
-from typing import TypeGuard
+from dataclasses import dataclass
 
 
-def is_int_list(x: list[int] | list[str]) -> TypeGuard[list[int]]:
-    """TypeGuard
-    принимает список из чисел или строк (Union)
-    возвращает тип TypeGuard[list[int]]
-    реально возвращает булево:
-    True если список из чисел, иначе False
-    """
-    return all(isinstance(i, int) for i in x)
+@dataclass
+class ClickEvent:
+    x: int
+    y: int
 
 
-def is_str_list(x: list[int] | list[str]) -> TypeGuard[list[str]]:
-    """TypeGuard
-    принимает список из чисел или строк (Union)
-    возвращает тип TypeGuard[list[int]]
-    реально возвращает булево:
-    True если список из строк, иначе False
-    """
-    return all(isinstance(i, str) for i in x)
+@dataclass
+class KeyEvent:
+    key: str
 
 
-def f(xs: list[int] | list[str]):
-    """Применяем методы для списков из чисел и списков из строк"""
-    if is_int_list(xs):  # проверяем xs на список из чисел
-        xs[0].is_integer()  # можем выбрать методы только для списка из чисел
-    # else:  # казалось бы, можно и так, НО...
-    #     xs[0].capitalize()  # тип снова стал общим и не годен для метдоов строк
+@dataclass
+class ResizeEvent:
+    width: int
+    height: int
 
-    if is_str_list(xs):  # значит проверка xs на список из строк
-        xs[0].capitalize()  # теперь можем выбрать медтды для списка из строк
+
+def handle_event(ev: ClickEvent | KeyEvent | ResizeEvent) -> str:
+    match ev:
+        case ClickEvent(x=x, y=y):
+            return f'Координаты клика {x}*{y}'
+        case KeyEvent(key=key):
+            return f'Нажата клавиша {key}'
+        case ResizeEvent(width=width, height=height):
+            return f'Размер: {width}*{height}'
+        case _:
+            raise ValueError('Неизвестное событие')
+
+
+print(handle_event(ClickEvent(1, 10)))
+print(handle_event(KeyEvent('Enter')))
+print(handle_event(ResizeEvent(1920, 1080)))
