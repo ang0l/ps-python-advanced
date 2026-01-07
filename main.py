@@ -1,17 +1,22 @@
 """Демомодуль для курса
-async await"""
+gather"""
 
 import asyncio
+# import time
 
 
-async def get_messate():
-    return 'Привет'
+async def fetch():
+    # time.sleep(2)  # здеь хотим получить данные
+    await asyncio.sleep(2)
+    return 'done'
 
 
 async def main():
-    result = await asyncio.create_task(get_messate())
-    print(result)
+    tasks = [fetch() for _ in range(100)]
+    results = await asyncio.gather(*tasks)
+    print(results)
+    # for _ in range(3):
+    #     print(fetch())
 
-# main()
 
 asyncio.run(main())
