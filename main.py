@@ -1,22 +1,20 @@
 """Демомодуль для курса
-gather"""
+Асинхронные контекстные менеджеры"""
 
 import asyncio
-# import time
-
-
-async def fetch():
-    # time.sleep(2)  # здеь хотим получить данные
-    await asyncio.sleep(2)
-    return 'done'
+import aiohttp
+# import requests
 
 
 async def main():
-    tasks = [fetch() for _ in range(100)]
-    results = await asyncio.gather(*tasks)
-    print(results)
-    # for _ in range(3):
-    #     print(fetch())
+    # res = requests.get('https://google.com', timeout=10)
+    #  # res = requests.get('https://google.com', timeout=10)
+    #  # res = requests.get('https://google.com', timeout=10)
+    #  # res = requests.get('https://google.com', timeout=10)
+    #  # print(res.status_code)
+    async with aiohttp.ClientSession() as session:
+        res = await session.get('https://google.com')
+        print(res.status)
 
 
 asyncio.run(main())
