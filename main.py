@@ -1,23 +1,38 @@
 """Демомодуль для курса
-wait и wait_for"""
+Обработка ошибок"""
 
 import asyncio
-import aiohttp
 
 
-# Полученние в задачах параллельно 10 раз обращение к google.com
+async def good():
+    print('Начата good')
+    return 1
 
-async def fetch(session, url):
-    return await asyncio.wait_for(session.get(url), timeout=2)
+
+async def bad():
+    print('Начата bad')
+    raise ValueError('Ошибка')
+    # return 1
 
 
 async def main():
-    urls = ['https://google.com'] * 10
-    async with aiohttp.ClientSession() as session:
-        tasks = [asyncio.create_task(fetch(session, url)) for url in urls]
+    # # try:
+    # #     # res = await asyncio.create_task(bad())
+    # #     task = asyncio.create_task(bad())
+    # #     await asyncio.sleep(2)
+    # #     print('Ждем')
+    # #     await task
+    # #     # print(res)
+    # # except ValueError as e:
+    # #     print(e)
+    # task = asyncio.create_task(bad())
+    # task.add_done_callback(lambda t: print('Ошибочка', t.exception()))
+    try:
+        result = await asyncio.gather(bad(), good(), return_exceptions=True)
+        print(result)
+    # except ValueError as e:
+    except ValueError as e:
+        print(e)
 
-        done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
-        results = [task.result() for task in done]
-        print(list(map(lambda x: x.status, results)))
 
 asyncio.run(main())
