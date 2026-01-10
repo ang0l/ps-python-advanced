@@ -1,5 +1,5 @@
 """Демомодуль для курса
-shield"""
+Task vs Coroutine"""
 
 import asyncio
 
@@ -8,13 +8,21 @@ async def save():
     print('Сохраняю')
     await asyncio.sleep(2)
     print('Сохранено')
+    raise ValueError('e')
+    return 1
 
 
 async def job():
     print('Работаю')
-    t = asyncio.create_task(save())
+    t = save()
+    # t = asyncio.create_task(save())
+    # await asyncio.shield(t)
     # await t
-    await asyncio.shield(t)
+    try:
+        res = await t
+        print(res)
+    except ValueError:
+        print('Ошибка')
     await asyncio.sleep(5)
     print('Готово')
 
@@ -22,7 +30,7 @@ async def job():
 async def main():
     task = asyncio.create_task(job())
     await asyncio.sleep(1)
-    task.cancel()
+    # task.cancel()
     try:
         await task
     except asyncio.CancelledError:
