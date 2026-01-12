@@ -4,12 +4,9 @@ authors = [
 ]
 dependencies = ["textual (>=7.2.0,<8.0.0)"]
 description = "Проект заметок"
-name = "note-app"
+name = "note_app"
 requires-python = ">=3.10, <4.0"
 version = "0.1.0"
-
-[tool.poetry]
-package-mode = false
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
@@ -19,3 +16,6 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 dev = [
   "pytest (>=9.0.2,<10.0.0)",
 ]
+
+[tool.poetry.scripts]
+app = "note_app.cli:run"
