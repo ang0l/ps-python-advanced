@@ -1,43 +1,24 @@
 """Демомодуль для курса
-Упражнение - Retry Coroutine"""
+Конфигурация"""
 
-import asyncio
-import random
+from pathlib import Path
+import sys
 
-
-async def unstable():
-    await asyncio.sleep(0.2)
-    if random.random() < 0.5:
-        raise ValueError("Случайная ошибка")
-    return "OK"
+from note_app.config.config import AppSettings
 
 
-# получаем ссылку на корутину и максимальное количество итераций
-async def run_with_retry(job, max_retries=3):
-    for attempt in range(1, max_retries + 1):
-        # по полученой ссылке запускаем корутину 'job()'
-        task = asyncio.create_task(job())
+def create_app(data_path: Path | None = None):
+    settings: AppSettings
+    if data_path:
+        settings = AppSettings.from_custom_path(data_path)
+    else:
+        settings = AppSettings.from_defaults()
 
-        try:
-            result = await task
-            print(f'Попытка {attempt}: успех -> {result}')
-            return result
-        except Exception as e:
-            print(f'Попытка {attempt}: ошибка -> {e}')
-
-            if attempt == max_retries:
-                print('Все попытки исчерпаны')
-                return 'ОШИБКА'
-
-            await asyncio.sleep(0.5)
-
-
-async def main():
-    # run_with_retry - сделать корутингу, которая запустит корутину
-    # если она выбросила ошибку, пробует заново до указанного лимита
-    result = await run_with_retry(unstable)  # отправляем ссылку на корутину
-    print(f'Итог: {result}')
+    # Старт приложения
 
 
 def run():
-    asyncio.run(main())
+    data_path = None
+    if len(sys.argv[1]):
+        data_path = Path(sys.argv[1])
+    create_app(data_path)
