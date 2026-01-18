@@ -4,7 +4,7 @@
 from pathlib import Path
 import sys
 
-from note_app.config.app import NoteManagerApp
+from note_app.app import NoteManagerApp
 from note_app.config.config import AppSettings
 
 
