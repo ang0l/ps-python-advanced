@@ -1,3 +1,3 @@
 from .config import AppSettings
 
-__all_ = ['AppSettings']
+__all__ = ['AppSettings']

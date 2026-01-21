@@ -15,7 +15,9 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 [dependency-groups]
 dev = [
   "pytest (>=9.0.2,<10.0.0)",
+  "ruff (>=0.14.13,<0.15.0)",
 ]
 
 [tool.poetry.scripts]
 app = "note_app.cli:run"
+lint = "scripts.lint:run"
