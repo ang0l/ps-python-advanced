@@ -1,5 +1,5 @@
 """Демомодуль для курса
-Первый виджет"""
+Бизнес сущности"""
 
 from pathlib import Path
 import sys
