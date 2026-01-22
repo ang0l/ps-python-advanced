@@ -1,5 +1,5 @@
 """Демомодуль для курса
-Bindings"""
+Контейнеры и стили"""
 
 from pathlib import Path
 import sys
