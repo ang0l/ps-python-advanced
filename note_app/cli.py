@@ -1,5 +1,5 @@
 """Демомодуль для курса
-ruff"""
+Bindings"""
 
 from pathlib import Path
 import sys
@@ -35,6 +35,6 @@ def run():
         # если есть второй аргумент, присваивается переменной "путь"
         data_path = Path(sys.argv[1])
 
-    # пока запуск функции creat_app(data_path: Path | None = None)
+    # пока формируется приложение через функцию creat_app(data_path: Path | None = None)
     app = create_app(data_path)
     app.run()
