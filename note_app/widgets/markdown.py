@@ -1,3 +1,4 @@
+"""Модуль работы с видетом Markdown"""
 from textual.app import ComposeResult
 from textual.containers import VerticalScroll
 from textual.widgets import Markdown
@@ -5,6 +6,7 @@ from textual.reactive import reactive
 
 
 class MarkdownWidget(VerticalScroll):
+    """Клас виджета Markdown"""
 
     text: reactive[str | None] = reactive('')  # можно убрать типизацию
 
