@@ -19,5 +19,5 @@ class NoteManagerApp(App):
     def on_mount(self) -> None:
         """Премонтирование экрана"""
 
-        main_screen = MainScreen()
+        main_screen = MainScreen(self.settings)
         self.push_screen(main_screen)
