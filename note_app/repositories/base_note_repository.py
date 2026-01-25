@@ -1,0 +1,20 @@
+"""Базовый модуль репозитория заметок"""
+from abc import ABC, abstractmethod
+from pathlib import Path
+
+from note_app.domain import Note
+
+
+class BaseNoteRerpository(ABC):
+
+    @abstractmethod
+    def get_notes_by_path(self, path: Path) -> list[Note]:
+        pass
+
+    @abstractmethod
+    def create_note(self, path: Path, name: str) -> Note:
+        pass
+
+    @abstractmethod
+    def delete_note(self, note: Note) -> None:
+        pass

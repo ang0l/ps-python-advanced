@@ -1,12 +1,11 @@
-"""Модуль работы с репозитория папок"""
+"""Модуль работы с репозитория заметок"""
 
 from pathlib import Path
-import shutil
-from note_app.domain.folder import Folder
-from note_app.repositories.base_folder_repository import BaseFolderRerpository
+from note_app.domain import Note
+from note_app.repositories.base_note_repository import BaseNoteRerpository
 
 
-class FolderRerpository(BaseFolderRerpository):
+class NoteRerpository(BaseNoteRerpository):
     """Класс Репозиторий"""
 
     def __init__(self, base_path: Path) -> None:
@@ -19,14 +18,14 @@ class FolderRerpository(BaseFolderRerpository):
 
         if not path.exists() or not path.is_dir():
             # Если путь не существует или не является директорией: Ошибка
-            raise ValueError(f'Папка не существует: {path}')
+            raise ValueError(f'Заметка не существует: {path}')
 
         if self.base_path not in path.parents and path != self.base_path:
             # Если путь не внутри базового пути и не базовый путь: Ошибка
             raise ValueError('Доступ к внешнему катологу данных запрещен')
 
-    def get_folders_by_path(self, path: Path) -> list[Folder]:
-        """Получение директорий"""
+    def get_notes_by_path(self, path: Path) -> list[Note]:
+        """Получение заметок"""
 
         # Преобразовываем принятый путь в абсолютный
         path = path.resolve()
@@ -35,24 +34,24 @@ class FolderRerpository(BaseFolderRerpository):
         self._check_path(path)
 
         # Инициализируем пустой список для хранения папок
-        folders: list[Folder] = []
+        notes: list[Note] = []
 
         # Итерация по каждому подкаталогу в выбранной директории
         for sub_path in path.iterdir():
 
-            if sub_path.is_dir() and not sub_path.name.startswith('.'):
+            if sub_path.is_file() and not sub_path.name.startswith('.') and sub_path.suffix == '.md':
                 # Если суб-путь - директория не начинающаяся с точки: добавляем в список
-                folders.append(
-                    Folder(
+                notes.append(
+                    Note(
                         name=sub_path.name,
                         path=sub_path
                     )
                 )
 
         # Возвращае список папок отсортированный по имени
-        return sorted(folders, key=lambda f: f.name)
+        return sorted(notes, key=lambda f: f.name)
 
-    def create_folder(self, path: Path, name: str) -> Folder:
+    def create_note(self, path: Path, name: str) -> Note:
         """Создание директории"""
 
         # Проверка валидности пути
@@ -60,22 +59,18 @@ class FolderRerpository(BaseFolderRerpository):
 
         if not name or '/' in name or '\\' in name:
             # Если имени или в имени директории содержатся слеши: Ошибка
-            raise ValueError('Неверное имя директории')
+            raise ValueError('Неверное имя заметки')
 
         # Создаем директорию
         path.mkdir(parents=True, exist_ok=False)
 
         # Возвращаем созданную папку
-        return Folder(name, path)
+        return Note(name, path)
 
-    def delete_folder(self, folder: Folder) -> None:
+    def delete_note(self, note: Note) -> None:
         """Удаление директории"""
-        path = folder.path.resolve()
+        path = note.path.resolve()
 
         # Проверка валидности пути
         self._check_path(path)
-
-        if path == self.base_path:
-            raise ValueError('Нельзя удалить корневую папку')
-
-        shutil.rmtree(path)
+        path.unlink()
