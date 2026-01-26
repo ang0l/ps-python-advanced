@@ -1,6 +1,7 @@
 """Базовый модуль репозитория заметок"""
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Optional
 
 from note_app.domain import Note
 
@@ -17,4 +18,8 @@ class BaseNoteRerpository(ABC):
 
     @abstractmethod
     def delete_note(self, note: Note) -> None:
+        pass
+
+    @abstractmethod
+    def update_note(self, note: Note, content: str, new_name: Optional[str] = None) -> Note:
         pass
