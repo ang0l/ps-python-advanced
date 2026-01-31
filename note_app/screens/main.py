@@ -6,7 +6,7 @@ from textual.widgets import Header, Footer
 from textual.containers import Horizontal
 
 from note_app.config import AppSettings
-from note_app.repositories import FolderRerpository
+from note_app.repositories import FolderRerpository, NoteRerpository
 from note_app.widgets import NoteViewWidget
 from note_app.widgets import FileTreeWidget
 
@@ -36,13 +36,14 @@ class MainScreen(Screen):
     def compose(self) -> ComposeResult:
 
         folder_repo = FolderRerpository(self.settings.data_deirctory)
+        note_repo = NoteRerpository(self.settings.data_deirctory)
         # генерируется Header
         yield Header()
 
         with Horizontal():
 
             # Генерируется дерево папок
-            yield FileTreeWidget(folder_repo)
+            yield FileTreeWidget(folder_repo, note_repo)
 
             # Генерируется Маркдаун
             yield NoteViewWidget()
