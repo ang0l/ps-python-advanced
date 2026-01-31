@@ -6,7 +6,7 @@ from textual.widgets import Header, Footer
 from textual.containers import Horizontal
 
 from note_app.config import AppSettings
-from note_app.repositories import FolderRerpository, NoteRerpository
+from note_app.repositories import BaseFolderRerpository, BaseNoteRerpository
 from note_app.widgets import NoteViewWidget
 from note_app.widgets import FileTreeWidget
 
@@ -20,9 +20,11 @@ class MainScreen(Screen):
     }
     """
 
-    def __init__(self, settings: AppSettings, *args, **kwargs) -> None:
+    def __init__(self, settings: AppSettings, folder_repo: BaseFolderRerpository, note_repo: BaseNoteRerpository, *args, **kwargs) -> None:
 
         self.settings = settings
+        self._folder_repo = folder_repo
+        self._note_repo = note_repo
 
         super().__init__(*args, **kwargs)
 
@@ -35,15 +37,13 @@ class MainScreen(Screen):
 
     def compose(self) -> ComposeResult:
 
-        folder_repo = FolderRerpository(self.settings.data_deirctory)
-        note_repo = NoteRerpository(self.settings.data_deirctory)
         # генерируется Header
         yield Header()
 
         with Horizontal():
 
             # Генерируется дерево папок
-            yield FileTreeWidget(folder_repo, note_repo)
+            yield FileTreeWidget(self._folder_repo, self._note_repo)
 
             # Генерируется Маркдаун
             yield NoteViewWidget()
@@ -59,4 +59,8 @@ class MainScreen(Screen):
         self.app.exit()
 
     def on_file_tree_widget_note_selected(self, message: FileTreeWidget.NoteSelected) -> None:
-        self.notify(message.note_path._str)
+        note = self._note_repo.load_note(message.note_path)
+        if note.content:
+            self.query_one(NoteViewWidget).text = note.content
+        else:
+            self.query_one(NoteViewWidget).text = ''
